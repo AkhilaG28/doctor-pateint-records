@@ -4,6 +4,7 @@ import { Route } from "react-router-dom";
 import Register from "./LandingPage/Register";
 import Login from "./LandingPage/Login";
 import Dashboard from "./Dashboard/Dashboard";
+import PatientDetails from "./Dashboard/PatientDetails";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/register" component={Register} />
       <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/patientDetails/:id" component={PatientDetails} />
     </div>
   );
 }
