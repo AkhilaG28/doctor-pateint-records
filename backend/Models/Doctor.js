@@ -17,10 +17,6 @@ const doctorSchema = new Schema(
       required: true,
       min: 6,
     },
-    patients: {
-      type: Array,
-      default: [],
-    },
   },
   {
     versionKey: false,

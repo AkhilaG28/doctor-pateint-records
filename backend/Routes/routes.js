@@ -52,7 +52,7 @@ router.post("/login/user", loginUser);
 
 router.get("/check/user", authenticateToken, checkUser);
 
-router.get("/getPatients", getPatientsRecords);
+router.get("/getPatients/:id", getPatientsRecords);
 
 router.post("/addPatient", upload.single("avatar"), postPatientRecord);
 

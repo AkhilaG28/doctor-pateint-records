@@ -1,10 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { addPatientRecord } from "../PatientRecords/actions";
 
-function AddPatient() {
+export default function AddPatient() {
   let initialState = {
     gender: "",
     name: "",
@@ -42,14 +41,18 @@ function AddPatient() {
     return getMedicine;
   };
 
+  const addRow = () => {
+    setMedicines((prev) => prev + 1);
+  };
+
   const addPatient = (e) => {
     e.preventDefault();
     let patientRecord = new FormData();
     for (let key in patientDetails) {
       patientRecord.append(key, patientDetails[key]);
     }
-    patientRecord.append("prescription", prescription);
-    patientRecord.append("docEmail", userData.email);
+    patientRecord.append("prescription", JSON.stringify(prescription));
+    patientRecord.append("docId", userData.userId);
     dispatch(addPatientRecord(patientRecord));
     console.log("pres", prescription);
   };
@@ -130,31 +133,10 @@ function AddPatient() {
             id="imageFile"
           />
         </div>
-        {/* <div className="row text-center">
-          <div className="col">
-            <input
-              onChange={handleMedicine}
-              type="text"
-              placeholder="Medicine"
-            />
-          </div>
-          <div className="col">
-            <input
-              onChange={handleMedicine}
-              type="text"
-              placeholder="Quantity"
-            />
-          </div>
-          <div className="col">
-            <i className="fas fa-plus-square fa-2x"></i>
-          </div>
-        </div> */}
         <Prescription onSubmit={handleAdd} />
         {addMedicine()}
         <div className="row">
-          <button onClick={() => setMedicines(medicines + 1)}>
-            Add Medicine
-          </button>
+          <button onClick={addRow}>Add Medicine</button>
         </div>
         <button
           type="button"
@@ -168,33 +150,39 @@ function AddPatient() {
   );
 }
 
-export default AddPatient;
-
 function Prescription({ onSubmit, key }) {
-  const [medicineName, setMedicineName] = useState("");
-  const [quantity, setQuantity] = useState("");
+  let pres = {
+    medicineName: "",
+    quantity: "",
+  };
+  const [prescrip, setPrescrip] = useState(pres);
+
+  const handlePrescp = (e) => {
+    const { name, value } = e.target;
+    setPrescrip((state) => ({ ...state, [name]: value }));
+  };
 
   const handleAdd = () => {
-    let obj = { medicineName, quantity };
-    console.log(obj);
+    let obj = prescrip;
     onSubmit(obj);
-    console.log("formCLass");
   };
 
   return (
     <div className="px-5 row mb-3">
       <input
         className="col"
+        name="medicineName"
         type="text"
-        value={medicineName}
-        onChange={(e) => setMedicineName(e.target.value)}
+        value={prescrip.medicineName}
+        onChange={handlePrescp}
         placeholder="Medicine"
       />
       <input
+        name="quantity"
         className="col offset-1"
         type="number"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
+        value={prescrip.quantity}
+        onChange={handlePrescp}
         placeholder="Quantity"
       />
 

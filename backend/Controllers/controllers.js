@@ -7,6 +7,7 @@ dotenv.config();
 
 const { registerValidation, loginValidation } = require("../validation");
 const Doctor = require("../Models/Doctor");
+const Patients = require("../Models/Patients");
 
 const registerUser = async (req, res) => {
   const { error } = registerValidation(req.body);
@@ -57,7 +58,7 @@ const loginUser = async (req, res) => {
   res.status(200).json({
     message: "Login Successful",
     accessToken: accessToken,
-    user: { email: user.email, name: user.name, patients: user.patients },
+    user: { email: user.email, name: user.name, userId: user._id },
   });
 };
 
@@ -70,13 +71,16 @@ const checkUser = async (req, res) => {
 const getPatientsRecords = async (req, res) => {
   const page = Number.parseInt(req.query.page);
   const limit = Number.parseInt(req.query.limit);
+  // console.log(req.params.id);
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
   let results = {};
 
-  results.totalCount = await Doctor.countDocuments().exec();
+  results.totalCount = await Patients.find({ docId: req.params.id })
+    .countDocuments()
+    .exec();
 
   if (endIndex < results.totalCount) {
     results.next = {
@@ -93,7 +97,10 @@ const getPatientsRecords = async (req, res) => {
   }
 
   try {
-    results.current = await Doctor.find().limit(limit).skip(startIndex).exec();
+    results.current = await Patients.find({ docId: req.params.id })
+      .limit(limit)
+      .skip(startIndex)
+      .exec();
     res.status(200).json(results);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -101,30 +108,33 @@ const getPatientsRecords = async (req, res) => {
 };
 
 const postPatientRecord = async (req, res) => {
-  console.log(req.body.prescription);
-
   let name = req.body.name;
   let age = req.body.age;
   let gender = req.body.gender;
   let avatar = req.file.path;
   let prescription = req.body.prescription;
+  let docId = req.body.docId;
 
-  let newPatient = { name, age, gender, avatar, prescription };
-  console.log("new patient", newPatient);
-
-  let doctor = await Doctor.findOne({ email: req.body.docEmail });
-  console.log(doctor);
-  // doctor.patients.push(newPatient);
-  // console.log(doctor);
-
-  //   doctor
-  //     .save()
-  //     .then((newPatient) =>
-  //       res
-  //         .status(200)
-  //         // .json({ message: "Patient added successfully", data:newPatient})
-  //     )
-  //     .catch((err) => res.status(400).json({ err: err }));
+  let newPatient = new Patients({
+    name,
+    age,
+    gender,
+    avatar,
+    prescription,
+    docId,
+  });
+  // console.log("new patient", newPatient);
+  try {
+    newPatient
+      .save()
+      .then((newPatient) =>
+        res
+          .status(200)
+          .json({ message: "Patient added successfully", data: newPatient })
+      );
+  } catch (error) {
+    res.status(400).json({ err: error });
+  }
 };
 
 module.exports = {
