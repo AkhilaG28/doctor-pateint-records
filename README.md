@@ -1,1 +1,1 @@
-# doctor-pateint-records
+# doctor-patient-records
