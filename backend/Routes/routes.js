@@ -14,7 +14,7 @@ const {
   getPatientsRecords,
   postPatientRecord,
   //   updatePatientRecord,
-  //   deletePatientRecord,
+  deletePatientRecord,
 } = require("../Controllers/controllers");
 
 const storage = multer.diskStorage({
@@ -58,7 +58,7 @@ router.post("/addPatient", upload.single("avatar"), postPatientRecord);
 
 // router.put("/api/patient/update/:id", updatePatientRecord);
 
-// router.delete("/api/patient/delete/:id", deletePatientRecord);
+router.delete("/patient/delete/:id", deletePatientRecord);
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];

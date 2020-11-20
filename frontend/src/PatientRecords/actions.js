@@ -5,6 +5,9 @@ import {
   GET_PATIENTS_REQUEST,
   GET_PATIENTS_SUCCESS,
   GET_PATIENTS_FAILURE,
+  DELETE_PATIENT_REQUEST,
+  DELETE_PATIENT_SUCCESS,
+  DELETE_PATIENT_FAILURE,
 } from "./actionTypes";
 
 import axios from "axios";
@@ -50,11 +53,68 @@ export const getPatientFailure = (payload) => ({
   payload,
 });
 
-export const getPatientsRecords = (payload) => (dispatch) => {
+export const getPatientsRecords = (payload, page, name, gender, sort) => (
+  dispatch
+) => {
   dispatch(getPatientRequest());
+  console.log(payload, page, name, gender);
+  axios
+    .get(
+      `http://localhost:8000/getPatients/${payload}?page=${page}&limit=5&name=${name}&filter=${gender}&sort=${sort}`
+    )
+    .then((res) => {
+      console.log(res);
+      dispatch(getPatientSuccess(res.data));
+    })
+    .catch((err) => dispatch(getPatientFailure(err)));
+};
+
+//search for patients
+
+// export const searchPatientRequest = () => ({
+//   type: SEARCH_PATIENTS_REQUEST,
+// });s
+
+// export const searchPatientSuccess = (payload) => ({
+//   type: SEARCH_PATIENTS_SUCCESS,
+//   payload,
+// });
+
+// export const searchPatientFailure = (payload) => ({
+//   type: SEARCH_PATIENTS_FAILURE,
+//   payload,
+// });
+
+// export const searchPatientsRecords = (payload, page,name) => (dispatch) => {
+//   dispatch(searchPatientRequest());
+//   console.log(payload);
+//   axios
+//     .get(`http://localhost:8000/getPatients/${payload}?page=${page}&limit=5&search=${name}`)
+//     .then((res) => dispatch(searchPatientSuccess(res.data)))
+//     .catch((err) => dispatch(searchPatientFailure(err)));
+// };
+
+// delete a patient record
+
+export const deletePatientRequest = () => ({
+  type: DELETE_PATIENT_REQUEST,
+});
+
+export const deletePatientSuccess = (payload) => ({
+  type: DELETE_PATIENT_SUCCESS,
+  payload,
+});
+
+export const deletePatientFailure = (payload) => ({
+  type: DELETE_PATIENT_FAILURE,
+  payload,
+});
+
+export const deletePatientRecord = (payload) => (dispatch) => {
+  dispatch(deletePatientRequest());
   console.log(payload);
   axios
-    .get(`http://localhost:8000/getPatients/${payload}`)
-    .then((res) => dispatch(getPatientSuccess(res.data)))
-    .catch((err) => dispatch(getPatientFailure(err)));
+    .delete(`http://localhost:8000/patient/delete/${payload}`)
+    .then((res) => dispatch(deletePatientSuccess(res.data)))
+    .catch((err) => dispatch(deletePatientFailure(err)));
 };

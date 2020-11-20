@@ -71,17 +71,30 @@ const checkUser = async (req, res) => {
 const getPatientsRecords = async (req, res) => {
   const page = Number.parseInt(req.query.page);
   const limit = Number.parseInt(req.query.limit);
-  // console.log(req.params.id);
+  const search = req.query.name;
+  const gender = req.query.filter;
+  const sort = req.query.sort === "asc" ? 1 : req.query.sort === "all" ? 0 : -1;
+  console.log(gender);
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
+  let searchParams = {
+    docId: req.params.id,
+  };
+  // name: JSON.parse(JSON.stringify(`/${search}/`)),
+  // name: /a/,
+  if (gender !== "all") {
+    searchParams["gender"] = gender;
+  }
+
+  // console.log(searchParams.name);
+  console.log(typeof searchParams.name);
+
+  let docPatients = await Patients.find(searchParams);
+
+  console.log("doc", docPatients);
   let results = {};
-
-  results.totalCount = await Patients.find({ docId: req.params.id })
-    .countDocuments()
-    .exec();
-
   if (endIndex < results.totalCount) {
     results.next = {
       page: page + 1,
@@ -97,7 +110,8 @@ const getPatientsRecords = async (req, res) => {
   }
 
   try {
-    results.current = await Patients.find({ docId: req.params.id })
+    results.current = await Patients.find(searchParams)
+      .sort({ age: sort })
       .limit(limit)
       .skip(startIndex)
       .exec();
@@ -137,6 +151,17 @@ const postPatientRecord = async (req, res) => {
   }
 };
 
+const deletePatientRecord = (req, res) => {
+  let id = req.params.id;
+  Patients.findByIdAndDelete(id)
+    .then((result) =>
+      res
+        .status(200)
+        .json({ message: "Patient Record deleted successfully", data: result })
+    )
+    .catch((err) => console.log(err));
+};
+
 module.exports = {
   registerUser,
   checkUser,
@@ -144,5 +169,5 @@ module.exports = {
   getPatientsRecords,
   postPatientRecord,
   //   updatePatientRecord,
-  //   deletePatientRecord,
+  deletePatientRecord,
 };

@@ -5,6 +5,9 @@ import {
   GET_PATIENTS_REQUEST,
   GET_PATIENTS_SUCCESS,
   GET_PATIENTS_FAILURE,
+  DELETE_PATIENT_REQUEST,
+  DELETE_PATIENT_SUCCESS,
+  DELETE_PATIENT_FAILURE,
 } from "./actionTypes";
 
 export const initialState = {
@@ -14,6 +17,7 @@ export const initialState = {
   totalCount: "",
   errMsg: "",
   addedPatient: false,
+  deleted: false,
 };
 
 export default (state = initialState, action) => {
@@ -24,6 +28,7 @@ export default (state = initialState, action) => {
         isLoading: true,
         isError: false,
         errMsg: "",
+        deleted: false,
       };
 
     case ADD_PATIENT_SUCCESS:
@@ -32,6 +37,7 @@ export default (state = initialState, action) => {
         isLoading: false,
         isError: false,
         errMsg: "",
+        deleted: false,
       };
 
     case ADD_PATIENT_FAILURE:
@@ -40,6 +46,7 @@ export default (state = initialState, action) => {
         isLoading: false,
         isError: true,
         errMsg: action.payload,
+        deleted: false,
       };
 
     case GET_PATIENTS_REQUEST:
@@ -48,6 +55,7 @@ export default (state = initialState, action) => {
         isLoading: true,
         isError: false,
         errMsg: "",
+        deleted: false,
       };
 
     case GET_PATIENTS_SUCCESS:
@@ -58,6 +66,7 @@ export default (state = initialState, action) => {
         totalCount: action.payload.totalCount,
         isError: false,
         errMsg: "",
+        deleted: false,
       };
 
     case GET_PATIENTS_FAILURE:
@@ -66,6 +75,39 @@ export default (state = initialState, action) => {
         isLoading: false,
         isError: true,
         errMsg: action.payload,
+        deleted: false,
+      };
+
+    case DELETE_PATIENT_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        errMsg: "",
+        deleted: false,
+      };
+
+    case DELETE_PATIENT_SUCCESS:
+      let newList = state.patients.filter(
+        (item) => item.id != action.payload.id
+      );
+      return {
+        ...state,
+        isLoading: false,
+        patients: newList,
+        totalCount: state.totalCount - 1,
+        isError: false,
+        errMsg: "",
+        deleted: true,
+      };
+
+    case DELETE_PATIENT_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errMsg: action.payload,
+        deleted: false,
       };
 
     default:
