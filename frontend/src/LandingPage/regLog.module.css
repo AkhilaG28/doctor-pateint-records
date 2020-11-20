@@ -1,0 +1,16 @@
+.bg {
+  background-color: #98d9e1;
+  background-image: linear-gradient(325deg, #98d9e1 0%, #d6aed6 94%);
+  width: 100%;
+  color: #eb3b5a;
+  font-weight: bold;
+}
+
+.marginTop {
+  padding: 10% 0 30% 0;
+}
+
+.submit {
+  background: #eb3b5a;
+  color: white;
+}
