@@ -1,0 +1,17 @@
+.logo {
+  height: 60px;
+  width: 150px;
+}
+
+.doc {
+  margin-left: 620px;
+  height: 600px;
+}
+
+.title {
+  position: absolute;
+  top: 150px;
+  width: 650px;
+  left: 150px;
+  opacity: 1;
+}

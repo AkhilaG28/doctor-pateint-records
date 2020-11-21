@@ -64,17 +64,18 @@ const loginUser = async (req, res) => {
 
 const checkUser = async (req, res) => {
   let loggedUser = await Doctor.findOne({ email: req.user.email });
-  console.log(loggedUser);
+  // console.log(loggedUser);
   res.json(loggedUser);
 };
 
 const getPatientsRecords = async (req, res) => {
+  // console.log(req.query);
   const page = Number.parseInt(req.query.page);
   const limit = Number.parseInt(req.query.limit);
   const search = req.query.name;
   const gender = req.query.filter;
   const sort = req.query.sort === "asc" ? 1 : req.query.sort === "all" ? 0 : -1;
-  console.log(gender);
+  // console.log(gender);
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
@@ -88,13 +89,19 @@ const getPatientsRecords = async (req, res) => {
     searchParams["gender"] = gender;
   }
 
+  if (search !== "all") {
+    searchParams["name"] = search;
+  }
+
   // console.log(searchParams.name);
-  console.log(typeof searchParams.name);
+  // console.log(typeof searchParams.name);
 
   let docPatients = await Patients.find(searchParams);
 
-  console.log("doc", docPatients);
+  // console.log("doc", docPatients);
   let results = {};
+
+  results.totalCount = docPatients.length;
   if (endIndex < results.totalCount) {
     results.next = {
       page: page + 1,
@@ -159,7 +166,7 @@ const deletePatientRecord = (req, res) => {
         .status(200)
         .json({ message: "Patient Record deleted successfully", data: result })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => res.status(400).json({ error: err }));
 };
 
 module.exports = {

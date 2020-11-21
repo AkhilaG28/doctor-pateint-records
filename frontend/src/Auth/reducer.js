@@ -5,6 +5,7 @@ import {
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  LOGOUT,
 } from "./actionTypes";
 
 import { loadData, saveData } from "../localStorage";
@@ -72,15 +73,13 @@ export default (state = initialState, action) => {
         errMsg: action.payload,
       };
 
-    //  case LOGOUT:
-    //   console.log('logout');
-    //   saveData('expenseManagerAuth', false);
-    //   saveData('expenseUser', []);
-    //   saveData('expenseManagerTransactions', []);
-    //   return {
-    //    ...state,
-    //    login: false
-    //   };
+    case LOGOUT:
+      // console.log('logout');
+      saveData("docUser", []);
+      return {
+        ...state,
+        login: false,
+      };
 
     default:
       return state;

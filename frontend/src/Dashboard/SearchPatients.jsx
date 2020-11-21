@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { TextField, InputAdornment } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import { useDispatch, useSelector } from "react-redux";
-import { getPatientsRecords } from "../PatientRecords/actions";
 
 const useStyles = makeStyles((theme) => ({
   margin: {

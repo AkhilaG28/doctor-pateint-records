@@ -29,6 +29,7 @@ export default (state = initialState, action) => {
         isError: false,
         errMsg: "",
         deleted: false,
+        addedPatient: false,
       };
 
     case ADD_PATIENT_SUCCESS:
@@ -38,6 +39,7 @@ export default (state = initialState, action) => {
         isError: false,
         errMsg: "",
         deleted: false,
+        addedPatient: true,
       };
 
     case ADD_PATIENT_FAILURE:
@@ -47,6 +49,7 @@ export default (state = initialState, action) => {
         isError: true,
         errMsg: action.payload,
         deleted: false,
+        addedPatient: false,
       };
 
     case GET_PATIENTS_REQUEST:
@@ -56,6 +59,7 @@ export default (state = initialState, action) => {
         isError: false,
         errMsg: "",
         deleted: false,
+        addedPatient: false,
       };
 
     case GET_PATIENTS_SUCCESS:
@@ -67,6 +71,7 @@ export default (state = initialState, action) => {
         isError: false,
         errMsg: "",
         deleted: false,
+        addedPatient: false,
       };
 
     case GET_PATIENTS_FAILURE:
@@ -76,6 +81,7 @@ export default (state = initialState, action) => {
         isError: true,
         errMsg: action.payload,
         deleted: false,
+        addedPatient: false,
       };
 
     case DELETE_PATIENT_REQUEST:
@@ -85,6 +91,7 @@ export default (state = initialState, action) => {
         isError: false,
         errMsg: "",
         deleted: false,
+        addedPatient: false,
       };
 
     case DELETE_PATIENT_SUCCESS:
@@ -99,6 +106,7 @@ export default (state = initialState, action) => {
         isError: false,
         errMsg: "",
         deleted: true,
+        addedPatient: false,
       };
 
     case DELETE_PATIENT_FAILURE:
@@ -108,6 +116,7 @@ export default (state = initialState, action) => {
         isError: true,
         errMsg: action.payload,
         deleted: false,
+        addedPatient: false,
       };
 
     default:

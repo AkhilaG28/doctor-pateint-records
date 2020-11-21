@@ -4,10 +4,9 @@ import styled from "styled-components";
 import classnames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../Auth/actions";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 const Input = styled.input`
-  background: transparent;
   outline: none;
   &:placeholder {
     color: crimson;
@@ -88,6 +87,19 @@ function Login() {
         >
           Login
         </button>
+        <div className="mt-3">
+          Didn't register yet?
+          <Link
+            to="/register"
+            style={{
+              textDecoration: "none",
+              color: "black",
+              marginLeft: "4px",
+            }}
+          >
+            Register
+          </Link>
+        </div>
       </form>
     </div>
   );

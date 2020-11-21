@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -16,18 +16,14 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  Card,
-  CardActions,
-  CardActionArea,
-  CardMedia,
-  CardContent,
   Typography,
-  Button,
 } from "@material-ui/core";
 import AllPatients from "./AllPatients";
 import AddPatient from "./AddPatient";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import { logout } from "../Auth/actions";
 
 const drawerWidth = 240;
 
@@ -108,6 +104,7 @@ function Dashboard() {
   const history = useHistory();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const { userData } = useSelector((state) => state.Auth);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -128,7 +125,12 @@ function Dashboard() {
     history.push(`/dashboard/${content}`);
   };
 
-  console.log(mainContent);
+  // console.log(mainContent);
+
+  const logoutUser = () => {
+    dispatch(logout());
+    history.push("");
+  };
 
   return (
     <div className={classes.root}>
@@ -152,7 +154,10 @@ function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Patient Records
+            Hi, Dr. {userData.name.toUpperCase()}
+          </Typography>
+          <Typography style={{ marginLeft: "80%" }}>
+            <PowerSettingsNewIcon onClick={logoutUser} />
           </Typography>
         </Toolbar>
       </AppBar>

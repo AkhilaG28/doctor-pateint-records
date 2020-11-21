@@ -5,6 +5,7 @@ import {
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  LOGOUT,
 } from "./actionTypes";
 
 import axios from "axios";
@@ -61,3 +62,9 @@ export const loginUser = (payload) => (dispatch) => {
     })
     .catch((err) => loginUserFailure(err));
 };
+
+// logout a user
+
+export const logout = () => ({
+  type: LOGOUT,
+});

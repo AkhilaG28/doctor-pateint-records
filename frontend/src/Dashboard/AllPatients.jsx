@@ -48,20 +48,20 @@ function AllPatients() {
       return item;
     } else return item;
   });
-
+  const [patientName, setPatientName] = useState("all");
   let totalPages = Math.ceil(totalCount / 5);
   useEffect(() => {
-    dispatch(getPatientsRecords(userData.userId, 1, "all", "all"));
+    dispatch(getPatientsRecords(userData.userId, 1, patientName, "all", sort));
   }, []);
-
-  const [patientName, setPatientName] = useState("all");
 
   const handleChange = (e) => {
     setPatientName(e.target.value);
   };
 
   const searchPatient = (e) => {
-    dispatch(getPatientsRecords(userData.userId, 1, patientName, filterGender));
+    dispatch(
+      getPatientsRecords(userData.userId, 1, patientName, filterGender, sort)
+    );
   };
 
   const handlePageChange = (e, value) => {
@@ -85,7 +85,7 @@ function AllPatients() {
         sort
       )
     );
-  }, [activePage, filterGender, patientName, sort]);
+  }, [activePage, filterGender, sort]);
 
   return (
     <div>
@@ -95,52 +95,56 @@ function AllPatients() {
         onClick={searchPatient}
         patientName={patientName}
       />
-      <div className="col-6 mt-2">
-        <div className="form-check form-check-inline ml-4">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="gender"
-            onChange={() => setFilterGender("Male")}
-            id="male"
-            value="Male"
-          />
-          <label className="form-check-label" htmlFor="male">
-            Male
-          </label>
+      <div className="row text-center offset-2 col-8 mb-5">
+        <div className="col mt-2">
+          <div className="form-check form-check-inline ml-4">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="gender"
+              onChange={() => setFilterGender("Male")}
+              id="male"
+              value="Male"
+            />
+            <label className="form-check-label" htmlFor="male">
+              Male
+            </label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="gender"
+              onChange={() => setFilterGender("Female")}
+              id="female"
+              value="Female"
+            />
+            <label className="form-check-label" htmlFor="female">
+              Female
+            </label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="gender"
+              onChange={() => setFilterGender("Other")}
+              id="other"
+              value="Other"
+            />
+            <label className="form-check-label" htmlFor="other">
+              Other
+            </label>
+          </div>
         </div>
-        <div className="form-check form-check-inline">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="gender"
-            onChange={() => setFilterGender("Female")}
-            id="female"
-            value="Female"
-          />
-          <label className="form-check-label" htmlFor="female">
-            Female
-          </label>
-        </div>
-        <div className="form-check form-check-inline">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="gender"
-            onChange={() => setFilterGender("Other")}
-            id="other"
-            value="Other"
-          />
-          <label className="form-check-label" htmlFor="other">
-            Other
-          </label>
+        <div className="col mt-2">
+          <select name="age" onChange={setSort}>
+            <option value="sort">Sort By Age</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
         </div>
       </div>
-      <select name="age" onChange={setSort}>
-        <option value="sort">Sort</option>
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
       <Pagination
         count={totalPages}
         onChange={handlePageChange}
@@ -164,9 +168,19 @@ function AllPatients() {
                     alt={item.name}
                   />
                 </div>
-                <div className="col-md-9 mt-1">
+                <div className="col-md-6 mt-1">
                   <div className="card-body">
                     <h2 className="card-title">{item.name}</h2>
+                  </div>
+                </div>
+                <div className="col-md-3 mt-3">
+                  <div className="card-body">
+                    <h2
+                      className="card-title text-dark"
+                      style={{ fontSize: "24px" }}
+                    >
+                      Age: {item.age}
+                    </h2>
                   </div>
                 </div>
                 <div className="col-md-1">
@@ -174,7 +188,7 @@ function AllPatients() {
                     to={`/patientDetails/${item._id}`}
                     style={{ textDecoration: "none" }}
                   >
-                    <div className="mt-2 text-white">...</div>
+                    <div className="mt-2 text-dark">...</div>
                   </Link>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPatientRecord } from "../PatientRecords/actions";
+import { useHistory } from "react-router-dom";
 
 export default function AddPatient() {
   let initialState = {
@@ -11,7 +12,9 @@ export default function AddPatient() {
     avatar: "",
   };
   const dispatch = useDispatch();
+  const history = useHistory();
   const { userData } = useSelector((state) => state.Auth);
+  const { addedPatient } = useSelector((state) => state.Patient);
   const [patientDetails, setPatientDetails] = useState(initialState);
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -20,29 +23,19 @@ export default function AddPatient() {
     else setPatientDetails({ ...patientDetails, [name]: value });
   };
 
-  const [medicines, setMedicines] = useState(0);
-  const [prescription, setPrescription] = useState([]);
+  const [prescription, setPrescription] = useState([
+    { medicineName: "", quantity: "" },
+  ]);
 
-  const handleAdd = (obj) => {
-    setPrescription([...prescription, obj]);
-    alert("Medicine Added!");
+  const handlePrescp = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...prescription];
+    list[index][name] = value;
+    setPrescription(list);
   };
 
-  const addMedicine = () => {
-    console.log("redirects");
-    let getMedicine = [];
-    for (let i = 0; i < medicines; i++) {
-      getMedicine.push(
-        <div key={i}>
-          <Prescription onSubmit={handleAdd} />
-        </div>
-      );
-    }
-    return getMedicine;
-  };
-
-  const addRow = () => {
-    setMedicines((prev) => prev + 1);
+  const handleAdd = () => {
+    setPrescription([...prescription, { medicineName: "", quantity: "" }]);
   };
 
   const addPatient = (e) => {
@@ -54,8 +47,14 @@ export default function AddPatient() {
     patientRecord.append("prescription", JSON.stringify(prescription));
     patientRecord.append("docId", userData.userId);
     dispatch(addPatientRecord(patientRecord));
-    console.log("pres", prescription);
+    // console.log("pres", prescription);
   };
+
+  // if (addedPatient) {
+  //   alert("Patient added to records");
+  //   addedPatient = false;
+  //   history.push("/dashboard/allPatients");
+  // }
 
   return (
     <div>
@@ -133,60 +132,43 @@ export default function AddPatient() {
             id="imageFile"
           />
         </div>
-        <Prescription onSubmit={handleAdd} />
-        {addMedicine()}
-        <div className="row">
-          <button onClick={addRow}>Add Medicine</button>
-        </div>
+
+        {prescription.map((item, i) => (
+          <div className="row text-center" key={i}>
+            <input
+              className="col"
+              name="medicineName"
+              type="text"
+              value={item.medicineName}
+              onChange={(e) => handlePrescp(e, i)}
+              placeholder="Medicine"
+            />
+            <input
+              name="quantity"
+              className="col offset-1"
+              type="number"
+              value={item.quantity}
+              onChange={(e) => handlePrescp(e, i)}
+              placeholder="Quantity"
+            />
+
+            {prescription.length - 1 === i && (
+              <i
+                className="fas fa-plus-square fa-2x col"
+                onClick={handleAdd}
+              ></i>
+            )}
+          </div>
+        ))}
         <button
           type="button"
           onClick={addPatient}
-          className="btn btn-info btn-block col-5 mt-4"
+          style={{ background: "#d6aed6" }}
+          className="btn btn-block col-6 offset-3 mt-4"
         >
           Add Patient
         </button>
       </form>
-    </div>
-  );
-}
-
-function Prescription({ onSubmit, key }) {
-  let pres = {
-    medicineName: "",
-    quantity: "",
-  };
-  const [prescrip, setPrescrip] = useState(pres);
-
-  const handlePrescp = (e) => {
-    const { name, value } = e.target;
-    setPrescrip((state) => ({ ...state, [name]: value }));
-  };
-
-  const handleAdd = () => {
-    let obj = prescrip;
-    onSubmit(obj);
-  };
-
-  return (
-    <div className="px-5 row mb-3">
-      <input
-        className="col"
-        name="medicineName"
-        type="text"
-        value={prescrip.medicineName}
-        onChange={handlePrescp}
-        placeholder="Medicine"
-      />
-      <input
-        name="quantity"
-        className="col offset-1"
-        type="number"
-        value={prescrip.quantity}
-        onChange={handlePrescp}
-        placeholder="Quantity"
-      />
-
-      <i className="fas fa-plus-square fa-2x col" onClick={handleAdd}></i>
     </div>
   );
 }
