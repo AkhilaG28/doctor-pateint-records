@@ -8,6 +8,7 @@ import {
   DELETE_PATIENT_REQUEST,
   DELETE_PATIENT_SUCCESS,
   DELETE_PATIENT_FAILURE,
+  CHANGE_QUERIES,
 } from "./actionTypes";
 
 import axios from "axios";
@@ -57,7 +58,7 @@ export const getPatientsRecords = (payload, page, name, gender, sort) => (
   dispatch
 ) => {
   dispatch(getPatientRequest());
-  console.log(payload, page, name, gender);
+  // console.log(payload, page, name, gender);
   axios
     .get(
       `http://localhost:8000/getPatients/${payload}?page=${page}&limit=5&name=${name}&filter=${gender}&sort=${sort}`
@@ -68,31 +69,6 @@ export const getPatientsRecords = (payload, page, name, gender, sort) => (
     })
     .catch((err) => dispatch(getPatientFailure(err)));
 };
-
-//search for patients
-
-// export const searchPatientRequest = () => ({
-//   type: SEARCH_PATIENTS_REQUEST,
-// });s
-
-// export const searchPatientSuccess = (payload) => ({
-//   type: SEARCH_PATIENTS_SUCCESS,
-//   payload,
-// });
-
-// export const searchPatientFailure = (payload) => ({
-//   type: SEARCH_PATIENTS_FAILURE,
-//   payload,
-// });
-
-// export const searchPatientsRecords = (payload, page,name) => (dispatch) => {
-//   dispatch(searchPatientRequest());
-//   console.log(payload);
-//   axios
-//     .get(`http://localhost:8000/getPatients/${payload}?page=${page}&limit=5&search=${name}`)
-//     .then((res) => dispatch(searchPatientSuccess(res.data)))
-//     .catch((err) => dispatch(searchPatientFailure(err)));
-// };
 
 // delete a patient record
 
@@ -118,3 +94,10 @@ export const deletePatientRecord = (payload) => (dispatch) => {
     .then((res) => dispatch(deletePatientSuccess(res.data)))
     .catch((err) => dispatch(deletePatientFailure(err)));
 };
+
+// change queries
+
+export const changeQueries = (payload) => ({
+  type: CHANGE_QUERIES,
+  payload,
+});

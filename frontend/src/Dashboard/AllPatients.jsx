@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPatientsRecords } from "../PatientRecords/actions";
+import { getPatientsRecords, changeQueries } from "../PatientRecords/actions";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
@@ -33,7 +33,7 @@ function AllPatients() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { userData } = useSelector((state) => state.Auth);
-  let { patients, totalCount } = useSelector((state) => state.Patient);
+  let { patients, totalCount, docUrl } = useSelector((state) => state.Patient);
 
   const [filterGender, setFilterGender] = useState("all");
 
@@ -50,8 +50,30 @@ function AllPatients() {
   });
   const [patientName, setPatientName] = useState("all");
   let totalPages = Math.ceil(totalCount / 5);
+
   useEffect(() => {
-    dispatch(getPatientsRecords(userData.userId, 1, patientName, "all", sort));
+    let payload = {
+      name: patientName,
+      sortOrder: sort,
+      page: activePage,
+      filter: filterGender,
+    };
+    // console.log(docUrl);
+    dispatch(changeQueries(payload));
+    // dispatch(
+    //   getPatientsRecords(
+    //     userData.userId,
+    //     docUrl.page || activePage,
+    //     docUrl.name || patientName,
+    //     docUrl.filter || filterGender,
+    //     docUrl.sortOrder || sort
+    //   )
+    // );
+    history.push(
+      `/dashboard/allPatients/${
+        userData.userId
+      }?page=${1}&limit=5&name=${patientName}&filter=all&sort=${sort}`
+    );
   }, []);
 
   const handleChange = (e) => {
@@ -62,11 +84,22 @@ function AllPatients() {
     dispatch(
       getPatientsRecords(userData.userId, 1, patientName, filterGender, sort)
     );
+    let payload = {
+      name: patientName,
+      sortOrder: sort,
+      page: activePage,
+      filter: filterGender,
+    };
+    dispatch(changeQueries(payload));
+    history.push(
+      `/dashboard/allPatients/${
+        userData.userId
+      }?page=${1}&limit=5&name=${patientName}&filter=${filterGender}&sort=${sort}`
+    );
   };
 
   const handlePageChange = (e, value) => {
     setActivePage(value);
-    // history.push(`?page=${value}&limit=5`);
   };
 
   const [sort, setSortOrder] = useState("sort");
@@ -84,6 +117,16 @@ function AllPatients() {
         filterGender,
         sort
       )
+    );
+    let payload = {
+      name: patientName,
+      sortOrder: sort,
+      page: activePage,
+      filter: filterGender,
+    };
+    dispatch(changeQueries(payload));
+    history.push(
+      `/dashboard/allPatients/${userData.userId}?page=${activePage}&limit=5&name=${patientName}&filter=${filterGender}&sort=${sort}`
     );
   }, [activePage, filterGender, sort]);
 
@@ -159,7 +202,7 @@ function AllPatients() {
       {patients &&
         patients.map((item) => (
           <Div key={item._id}>
-            <Card className="card col-8 offset-2 mb-2">
+            <Card className="card col-10 offset-1 mb-2">
               <div className="row no-gutters">
                 <div className="col-md-2">
                   <Image
@@ -168,7 +211,7 @@ function AllPatients() {
                     alt={item.name}
                   />
                 </div>
-                <div className="col-md-6 mt-1">
+                <div className="col-md-4 mt-1">
                   <div className="card-body">
                     <h2 className="card-title">{item.name}</h2>
                   </div>
@@ -177,7 +220,17 @@ function AllPatients() {
                   <div className="card-body">
                     <h2
                       className="card-title text-dark"
-                      style={{ fontSize: "24px" }}
+                      style={{ fontSize: "20px" }}
+                    >
+                      Medicines: {JSON.parse(item.prescription).length}
+                    </h2>
+                  </div>
+                </div>
+                <div className="col-md-2 mt-3">
+                  <div className="card-body">
+                    <h2
+                      className="card-title text-dark"
+                      style={{ fontSize: "20px" }}
                     >
                       Age: {item.age}
                     </h2>

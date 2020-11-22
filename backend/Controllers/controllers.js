@@ -75,7 +75,9 @@ const getPatientsRecords = async (req, res) => {
   const search = req.query.name;
   const gender = req.query.filter;
   const sort = req.query.sort === "asc" ? 1 : req.query.sort === "all" ? 0 : -1;
-  // console.log(gender);
+  console.log(search);
+
+  // searchParams[]
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
@@ -96,12 +98,12 @@ const getPatientsRecords = async (req, res) => {
   // console.log(searchParams.name);
   // console.log(typeof searchParams.name);
 
-  let docPatients = await Patients.find(searchParams);
+  let docPatients = await Patients.count(searchParams);
 
   // console.log("doc", docPatients);
   let results = {};
 
-  results.totalCount = docPatients.length;
+  results.totalCount = docPatients;
   if (endIndex < results.totalCount) {
     results.next = {
       page: page + 1,

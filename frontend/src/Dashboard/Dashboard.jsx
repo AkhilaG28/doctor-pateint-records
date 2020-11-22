@@ -116,10 +116,6 @@ function Dashboard() {
 
   const [mainContent, setMainContent] = useState("allPatients");
 
-  useEffect(() => {
-    history.push(`/dashboard/${mainContent}`);
-  }, []);
-
   const handleMainContent = (content) => {
     setMainContent(content);
     history.push(`/dashboard/${content}`);

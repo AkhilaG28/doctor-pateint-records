@@ -8,13 +8,18 @@ import {
   DELETE_PATIENT_REQUEST,
   DELETE_PATIENT_SUCCESS,
   DELETE_PATIENT_FAILURE,
+  CHANGE_QUERIES,
 } from "./actionTypes";
+import { loadData, saveData } from "../localStorage";
 
 export const initialState = {
   isLoading: false,
   isError: false,
   patients: [],
   totalCount: "",
+  urlParams: loadData("docUrl") || [
+    { name: "all", sortOrder: "sort", filter: "all", page: 1 },
+  ],
   errMsg: "",
   addedPatient: false,
   deleted: false,
@@ -117,6 +122,14 @@ export default (state = initialState, action) => {
         errMsg: action.payload,
         deleted: false,
         addedPatient: false,
+      };
+
+    case CHANGE_QUERIES:
+      saveData("docUrl", action.payload);
+      console.log(action.payload);
+      return {
+        ...state,
+        urlParams: action.payload,
       };
 
     default:
