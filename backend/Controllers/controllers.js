@@ -75,7 +75,7 @@ const getPatientsRecords = async (req, res) => {
   const search = req.query.name;
   const gender = req.query.filter;
   const sort = req.query.sort === "asc" ? 1 : req.query.sort === "all" ? 0 : -1;
-  console.log(search);
+  // console.log(search);
 
   // searchParams[]
 
@@ -98,7 +98,7 @@ const getPatientsRecords = async (req, res) => {
   // console.log(searchParams.name);
   // console.log(typeof searchParams.name);
 
-  let docPatients = await Patients.count(searchParams);
+  let docPatients = await Patients.countDocuments(searchParams);
 
   // console.log("doc", docPatients);
   let results = {};
